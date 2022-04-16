@@ -7,7 +7,7 @@
 config.log
 config.status
 config/common.mk
-config/config.h
+#config/config.h
 config/targets.mk
 tools/Logs/*
 tools/results.csv

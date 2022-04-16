@@ -21,6 +21,8 @@ set(CMAKE_INSTALL_PREFIX ${SHOC_INSTALL_DIR})
 
 include_directories(${SHOC_INC_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/src/common)
+include_directories(${PROJECT_SOURCE_DIR}/config)
+#include_directories(${CMAKE_CURRENT_BINARY_DIR}/config)
 
 if(${cmake_verbose})
 	cmake_print_variables(PROJECT_SOURCE_DIR)
@@ -39,7 +41,7 @@ endif()
 option(ENABLE_MPI     	"MPI"    	ON )
 
 # enable node programming model
-option(ENABLE_CUDA    	"CUDA"    	OFF)
+option(ENABLE_CUDA    	"CUDA"    	ON)
 option(ENABLE_OPENACC 	"OpenACC" 	OFF)
 option(ENABLE_OPENCL  	"OpenCL"  	OFF)
 option(ENABLE_OPENMP  	"OpenMP"  	OFF )
@@ -56,6 +58,7 @@ endif()
 
 if(${ENABLE_CUDA})
 	find_package(CUDAToolkit REQUIRED)
+#  message(STATUS "CUDA Compiler is" ${CMAKE_CUDA_COMPILER})
 endif()
 if(${ENABLE_OPENACC})
 	find_package(OpenACC REQUIRED)
@@ -91,5 +94,10 @@ configure_file (
     "${PROJECT_SOURCE_DIR}/include/shoc/shoci.h.in"
     "${SHOC_INC_DIR}/shoci.h"
 )
+
+#configure_file (
+#    "${PROJECT_SOURCE_DIR}/config/config.h.cmake"
+#    "${CMAKE_CURRENT_BINARY_DIR}/config/config.h"
+#)
 
 # eof
