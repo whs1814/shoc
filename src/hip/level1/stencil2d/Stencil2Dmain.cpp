@@ -349,9 +349,9 @@ RunBenchmark( ResultDatabase& resultDB, OptionParser& opts )
     MPI_Comm_rank( MPI_COMM_WORLD, &cwrank );
 #endif // defined(PARALLEL)
 
-    cudaGetDevice( &device );
-    cudaDeviceProp deviceProps;
-    cudaGetDeviceProperties( &deviceProps, device );
+    hipGetDevice( &device );
+    hipDeviceProp_t deviceProps;
+    hipGetDeviceProperties( &deviceProps, device );
 
     // Configure to allocate performance-critical memory in
     // a programming model-specific way.

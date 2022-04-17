@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <float.h>
 #include "cudacommon.h"
+#include <hip/math_functions.h>
 
 #define BLOCK_SIZE   64
 #define BLOCK_SIZE2  (2*BLOCK_SIZE)

@@ -155,7 +155,7 @@ rdwdot7_kernel (const real* RESTRICT RKF, const real* RESTRICT RKR,
 template <class real>
 __global__ void
 LAUNCH_BOUNDS (RDWDOT8_THRD, RDWDOT8_BLK)
-rdwdot8_kernel (hipLaunchParm lp,const real* RESTRICT RKF, const real* RESTRICT RKR,
+rdwdot8_kernel (const real* RESTRICT RKF, const real* RESTRICT RKR,
         real* RESTRICT WDOT, real rateconv, const real* RESTRICT molwt)
 {
     real ROP12 = ROP2(12) + ROP2(13) + ROP2(14)+ ROP2(15);

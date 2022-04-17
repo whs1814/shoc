@@ -1,7 +1,7 @@
 #ifndef REDUCTION_KERNEL_H_
 #define REDUCTION_KERNEL_H_
 
-#include <cuda.h>
+#include <hip/hip_runtime.h>
 
 // The following class is a workaround for using dynamically sized
 // shared memory in templated code. Without this workaround, the

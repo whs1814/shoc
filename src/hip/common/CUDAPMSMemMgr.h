@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 #include "cudacommon.h"
-#include <cuda.h>
+#include <hip/hip_runtime.h>
 #include <hip/hip_runtime_api.h>
 #include "PMSMemMgr.h"
 

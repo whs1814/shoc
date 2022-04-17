@@ -1,0 +1,13 @@
+
+#add_subdirectory(bfs)  #atomic
+add_subdirectory(fft)
+#add_subdirectory(gemm) #cublas
+add_subdirectory(md)
+add_subdirectory(md5hash)
+#add_subdirectory(neuralnet)  #cublas
+add_subdirectory(reduction)
+add_subdirectory(scan)
+add_subdirectory(sort)
+add_subdirectory(spmv)
+add_subdirectory(stencil2d)
+add_subdirectory(triad)

@@ -1,7 +1,7 @@
 #ifndef SCAN_KERNEL_H_
 #define SCAN_KERNEL_H_
 
-#include <cuda.h>
+#include <hip/hip_runtime.h>
 
 // NB: The following class is a workaround for using dynamically sized
 // shared memory in templated code. Without this workaround, the

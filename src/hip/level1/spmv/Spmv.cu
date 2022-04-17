@@ -1,6 +1,6 @@
 #include "cudacommon.h"
 #include <cassert>
-#include <cuda.h>
+#include <hip/hip_runtime.h>
 #include <hip/hip_runtime_api.h>
 #include <iostream>
 #include "OptionParser.h"

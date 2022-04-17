@@ -1,6 +1,6 @@
 #include "cudacommon.h"
-#include <cuda.h>
-#include <cuda_runtime_api.h>
+#include <hip/hip_runtime.h>
+#include <hip/hip_runtime_api.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -99,20 +99,20 @@ void RunBenchmark(ResultDatabase &resultDB, OptionParser &op)
     // Create some host memory pattern
     srand48(8650341L);
     float *h_mem;
-    cudaMallocHost((void**) &h_mem, sizeof(float) * numMaxFloats);
+    hipHostMalloc((void**) &h_mem, sizeof(float) * numMaxFloats);
     CHECK_CUDA_ERROR();
 
     // Allocate some device memory
     float* d_memA0, *d_memB0, *d_memC0;
-    cudaMalloc((void**) &d_memA0, blockSizes[nSizes - 1] * 1024);
-    cudaMalloc((void**) &d_memB0, blockSizes[nSizes - 1] * 1024);
-    cudaMalloc((void**) &d_memC0, blockSizes[nSizes - 1] * 1024);
+    hipMalloc((void**) &d_memA0, blockSizes[nSizes - 1] * 1024);
+    hipMalloc((void**) &d_memB0, blockSizes[nSizes - 1] * 1024);
+    hipMalloc((void**) &d_memC0, blockSizes[nSizes - 1] * 1024);
     CHECK_CUDA_ERROR();
 
     float* d_memA1, *d_memB1, *d_memC1;
-    cudaMalloc((void**) &d_memA1, blockSizes[nSizes - 1] * 1024);
-    cudaMalloc((void**) &d_memB1, blockSizes[nSizes - 1] * 1024);
-    cudaMalloc((void**) &d_memC1, blockSizes[nSizes - 1] * 1024);
+    hipMalloc((void**) &d_memA1, blockSizes[nSizes - 1] * 1024);
+    hipMalloc((void**) &d_memB1, blockSizes[nSizes - 1] * 1024);
+    hipMalloc((void**) &d_memC1, blockSizes[nSizes - 1] * 1024);
     CHECK_CUDA_ERROR();
 
     float scalar = 1.75f;
@@ -146,30 +146,29 @@ void RunBenchmark(ResultDatabase &resultDB, OptionParser &op)
             int crtIdx = 0;
             size_t globalWorkSize = elemsInBlock / blockSize;
 
-            cudaStream_t streams[2];
-            cudaStreamCreate(&streams[0]);
-            cudaStreamCreate(&streams[1]);
+            hipStream_t streams[2];
+            hipStreamCreate(&streams[0]);
+            hipStreamCreate(&streams[1]);
             CHECK_CUDA_ERROR();
 
             int TH = Timer::Start();
 
-            cudaMemcpyAsync(d_memA0, h_mem, blockSizes[i] * 1024,
-                    cudaMemcpyHostToDevice, streams[0]);
-            cudaMemcpyAsync(d_memB0, h_mem, blockSizes[i] * 1024,
-                    cudaMemcpyHostToDevice, streams[0]);
+            hipMemcpyAsync(d_memA0, h_mem, blockSizes[i] * 1024,
+                    hipMemcpyHostToDevice, streams[0]);
+            hipMemcpyAsync(d_memB0, h_mem, blockSizes[i] * 1024,
+                    hipMemcpyHostToDevice, streams[0]);
             CHECK_CUDA_ERROR();
 
-            triad<<<globalWorkSize, blockSize, 0, streams[0]>>>
-                    (d_memA0, d_memB0, d_memC0, scalar);
+            hipLaunchKernelGGL(triad, globalWorkSize, blockSize, 0, streams[0], d_memA0, d_memB0, d_memC0, scalar);
             CHECK_CUDA_ERROR();
 
             if (elemsInBlock < numMaxFloats)
             {
                 // start downloading data for next block
-                cudaMemcpyAsync(d_memA1, h_mem + elemsInBlock, blockSizes[i]
-                    * 1024, cudaMemcpyHostToDevice, streams[1]);
-                cudaMemcpyAsync(d_memB1, h_mem + elemsInBlock, blockSizes[i]
-                    * 1024, cudaMemcpyHostToDevice, streams[1]);
+                hipMemcpyAsync(d_memA1, h_mem + elemsInBlock, blockSizes[i]
+                    * 1024, hipMemcpyHostToDevice, streams[1]);
+                hipMemcpyAsync(d_memB1, h_mem + elemsInBlock, blockSizes[i]
+                    * 1024, hipMemcpyHostToDevice, streams[1]);
                 CHECK_CUDA_ERROR();
             }
 
@@ -181,13 +180,13 @@ void RunBenchmark(ResultDatabase &resultDB, OptionParser &op)
                 // Start copying back the answer from the last kernel
                 if (currStream)
                 {
-                    cudaMemcpyAsync(h_mem + crtIdx, d_memC0, elemsInBlock
-                        * sizeof(float), cudaMemcpyDeviceToHost, streams[0]);
+                    hipMemcpyAsync(h_mem + crtIdx, d_memC0, elemsInBlock
+                        * sizeof(float), hipMemcpyDeviceToHost, streams[0]);
                 }
                 else
                 {
-                    cudaMemcpyAsync(h_mem + crtIdx, d_memC1, elemsInBlock
-                        * sizeof(float), cudaMemcpyDeviceToHost, streams[1]);
+                    hipMemcpyAsync(h_mem + crtIdx, d_memC1, elemsInBlock
+                        * sizeof(float), hipMemcpyDeviceToHost, streams[1]);
                 }
                 CHECK_CUDA_ERROR();
 
@@ -198,13 +197,11 @@ void RunBenchmark(ResultDatabase &resultDB, OptionParser &op)
                     // Execute the kernel
                     if (currStream)
                     {
-                        triad<<<globalWorkSize, blockSize, 0, streams[1]>>>
-                                (d_memA1, d_memB1, d_memC1, scalar);
+                        hipLaunchKernelGGL(triad, globalWorkSize, blockSize, 0, streams[1], d_memA1, d_memB1, d_memC1, scalar);
                     }
                     else
                     {
-                        triad<<<globalWorkSize, blockSize, 0, streams[0]>>>
-                                (d_memA0, d_memB0, d_memC0, scalar);
+                        hipLaunchKernelGGL(triad, globalWorkSize, blockSize, 0, streams[0], d_memA0, d_memB0, d_memC0, scalar);
                     }
                     CHECK_CUDA_ERROR();
                 }
@@ -214,20 +211,20 @@ void RunBenchmark(ResultDatabase &resultDB, OptionParser &op)
                     // Download data for next block
                     if (currStream)
                     {
-                        cudaMemcpyAsync(d_memA0, h_mem+crtIdx+elemsInBlock,
-                                blockSizes[i]*1024, cudaMemcpyHostToDevice,
+                        hipMemcpyAsync(d_memA0, h_mem+crtIdx+elemsInBlock,
+                                blockSizes[i]*1024, hipMemcpyHostToDevice,
                                 streams[0]);
-                        cudaMemcpyAsync(d_memB0, h_mem+crtIdx+elemsInBlock,
-                                blockSizes[i]*1024, cudaMemcpyHostToDevice,
+                        hipMemcpyAsync(d_memB0, h_mem+crtIdx+elemsInBlock,
+                                blockSizes[i]*1024, hipMemcpyHostToDevice,
                                 streams[0]);
                     }
                     else
                     {
-                        cudaMemcpyAsync(d_memA1, h_mem+crtIdx+elemsInBlock,
-                                blockSizes[i]*1024, cudaMemcpyHostToDevice,
+                        hipMemcpyAsync(d_memA1, h_mem+crtIdx+elemsInBlock,
+                                blockSizes[i]*1024, hipMemcpyHostToDevice,
                                 streams[1]);
-                        cudaMemcpyAsync(d_memB1, h_mem+crtIdx+elemsInBlock,
-                                blockSizes[i]*1024, cudaMemcpyHostToDevice,
+                        hipMemcpyAsync(d_memB1, h_mem+crtIdx+elemsInBlock,
+                                blockSizes[i]*1024, hipMemcpyHostToDevice,
                                 streams[1]);
                     }
                     CHECK_CUDA_ERROR();
@@ -236,7 +233,7 @@ void RunBenchmark(ResultDatabase &resultDB, OptionParser &op)
                 currStream = !currStream;
             }
 
-            cudaThreadSynchronize();
+            hipDeviceSynchronize();
             double time = Timer::Stop(TH, "thread synchronize");
 
             double triad = ((double)numMaxFloats * 2.0) / (time*1e9);
@@ -270,11 +267,11 @@ void RunBenchmark(ResultDatabase &resultDB, OptionParser &op)
     CHECK_CUDA_ERROR();
 
     // Cleanup
-    cudaFree(d_memA0);
-    cudaFree(d_memB0);
-    cudaFree(d_memC0);
-    cudaFree(d_memA1);
-    cudaFree(d_memB1);
-    cudaFree(d_memC1);
-    cudaFreeHost(h_mem);
+    hipFree(d_memA0);
+    hipFree(d_memB0);
+    hipFree(d_memC0);
+    hipFree(d_memA1);
+    hipFree(d_memB1);
+    hipFree(d_memC1);
+    hipHostFree(h_mem);
 }
