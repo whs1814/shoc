@@ -4,7 +4,7 @@
 // the code is compiled for CC < 1.2.  So, we use this macro and stubs
 // so the code will compile cleanly.  If run on CC < 1.2, it will
 // return a "NoResult" flag.
-#if __CUDA_ARCH__ >= 120
+#if __HIP_ARCH_HAS_GLOBAL_INT32_ATOMICS__
 
 //Sungpack Hong, Sang Kyun Kim, Tayo Oguntebi, and Kunle Olukotun. 2011.
 //Accelerating CUDA graph algorithms at maximum warp.
@@ -44,10 +44,10 @@ __global__ void BFS_kernel_warp(
         int curr,
         int *flag)
 {
-    int tid = threadIdx.x + blockDim.x * blockIdx.x;
+    int tid = hipThreadIdx_x + hipBlockDim_x * hipBlockIdx_x;
     int W_OFF = tid % W_SZ;
     int W_ID = tid / W_SZ;
-    int NUM_WARPS = blockDim.x * gridDim.x/W_SZ;
+    int NUM_WARPS = hipBlockDim_x * hipGridDim_x/W_SZ;
     int v1= W_ID * CHUNK_SZ;
     int chk_sz=CHUNK_SZ+1;
 
@@ -108,7 +108,7 @@ __device__ void __gpu_sync(int blocks_to_synch)
 {
     __syncthreads();
     //thread ID in a block
-    int tid_in_block= threadIdx.x;
+    int tid_in_block= hipThreadIdx_x;
 
 
     // only thread 0 is used for synchronization
@@ -178,7 +178,7 @@ __global__ void Frontier_copy(
         unsigned int *frontier2,
         unsigned int *frontier_length)
 {
-    unsigned int tid=threadIdx.x + blockDim.x * blockIdx.x;
+    unsigned int tid=hipThreadIdx_x + hipBlockDim_x * hipBlockIdx_x;
 
     if(tid<*frontier_length)
     {
@@ -248,7 +248,7 @@ __global__ void BFS_kernel_one_block_spill(
     volatile __shared__ unsigned int b_offset[1];
     volatile __shared__ unsigned int b_q_length[1];
     //get the threadId
-    unsigned int tid=threadIdx.x;
+    unsigned int tid=hipThreadIdx_x;
     //copy frontier queue from global queue to local block queue
     if(tid<frontier_len)
     {
@@ -324,7 +324,7 @@ __global__ void BFS_kernel_one_block_spill(
         }
         // If frontier exceeds one block in size copy warp queues to
         //global frontier queue and exit
-        else if( b_q_length[0] > blockDim.x || b_q_length[0] > max_local_mem)
+        else if( b_q_length[0] > hipBlockDim_x || b_q_length[0] > max_local_mem)
         {
             if(tid<(b_q_length[0]-b_offset[0]))
                 frontier[b_offset[0]+tid]= *(volatile unsigned int *)&b_q[tid];
@@ -387,8 +387,8 @@ __global__ void BFS_kernel_SM_block_spill(
     volatile __shared__ unsigned int b_offset[1];
 
     //get the threadId
-    unsigned int tid=threadIdx.x + blockDim.x * blockIdx.x;
-    unsigned int lid=threadIdx.x;
+    unsigned int tid=hipThreadIdx_x + hipBlockDim_x * hipBlockIdx_x;
+    unsigned int lid=hipThreadIdx_x;
 
     int loop_index=0;
     unsigned int l_mutex=g_mutex2;
@@ -467,7 +467,7 @@ __global__ void BFS_kernel_SM_block_spill(
         }
         __syncthreads();
 
-        l_mutex+=gridDim.x;
+        l_mutex+=hipGridDim_x;
         __gpu_sync(l_mutex);
 
         //store frontier size
@@ -486,12 +486,12 @@ __global__ void BFS_kernel_SM_block_spill(
                 frontier[lid+b_offset[0]]=b_q[lid];
         }
 
-        l_mutex+=gridDim.x;
+        l_mutex+=hipGridDim_x;
         __gpu_sync(l_mutex);
 
         //if frontier exceeds SM blocks or less than 1 block exit
-        if(g_q_size[0] < blockDim.x ||
-                g_q_size[0] > blockDim.x * gridDim.x)
+        if(g_q_size[0] < hipBlockDim_x ||
+                g_q_size[0] > hipBlockDim_x * hipGridDim_x)
         {
 
             //TODO:Call the 1-block bfs right here
@@ -504,7 +504,7 @@ __global__ void BFS_kernel_SM_block_spill(
 
     if(loop_index==0)
     {
-        for(int i=tid;i<g_q_size[0];i += blockDim.x*gridDim.x)
+        for(int i=tid;i<g_q_size[0];i += hipBlockDim_x*hipGridDim_x)
                frontier[i]=frontier2[i];
     }
 
@@ -563,8 +563,8 @@ __global__ void BFS_kernel_multi_block_spill(
     volatile __shared__ unsigned int b_q_length[1];
     volatile __shared__ unsigned int b_offset[1];
     //get the threadId
-    unsigned int tid=threadIdx.x + blockDim.x * blockIdx.x;
-    unsigned int lid=threadIdx.x;
+    unsigned int tid=hipThreadIdx_x + hipBlockDim_x * hipBlockIdx_x;
+    unsigned int lid=hipThreadIdx_x;
 
     //initialize the block queue length and warp queue offset
     if (lid == 0 )
