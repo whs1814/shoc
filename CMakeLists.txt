@@ -14,9 +14,9 @@ set(cmake_verbose 1)          # set to 1 if you need to debug the cmake build
 #set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_BUILD_TYPE Debug)
 
-set(SHOC_SRC_DIR 	 			${PROJECT_SOURCE_DIR}/src)
-set(SHOC_INC_DIR 	 			${PROJECT_SOURCE_DIR}/include/shoc)
-set(SHOC_INSTALL_DIR 		${PROJECT_BINARY_DIR})
+set(SHOC_SRC_DIR         ${PROJECT_SOURCE_DIR}/src)
+set(SHOC_INC_DIR         ${PROJECT_SOURCE_DIR}/include/shoc)
+set(SHOC_INSTALL_DIR     ${PROJECT_BINARY_DIR})
 set(CMAKE_INSTALL_PREFIX ${SHOC_INSTALL_DIR})
 
 include_directories(${SHOC_INC_DIR})
@@ -54,8 +54,8 @@ if(${cmake_verbose})
 	cmake_print_variables(ENABLE_OPENACC)
 	cmake_print_variables(ENABLE_OPENCL )
 	cmake_print_variables(ENABLE_OPENMP )
-	cmake_print_variables(ENABLE_MPI )
-	cmake_print_variables(ENABLE_triSYCL   )
+	cmake_print_variables(ENABLE_MPI    )
+	cmake_print_variables(ENABLE_triSYCL)
 endif()
 
 if(${ENABLE_CUDA})

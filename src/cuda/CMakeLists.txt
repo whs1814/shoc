@@ -4,9 +4,9 @@ message(STATUS "CUDA Compiler is: " ${CMAKE_CUDA_COMPILER})
 set(CMAKE_CUDA_ARCHITECTURES 70)
 set(CUDA_SRC_DIR        ${SHOC_SRC_DIR}/cuda)
 set(CUDA_COMMON_SRC_DIR ${CUDA_SRC_DIR}/common)
-set(CMAKE_CXX_COMPILER  ${MPI_CXX_COMPILER})
 
 if(${ENABLE_MPI})
+  set(CMAKE_CXX_COMPILER  ${MPI_CXX_COMPILER})
   add_compile_options(-DPARALLEL)
   include_directories(${PROJECT_SOURCE_DIR}/src/mpi/common)
 endif()
@@ -22,6 +22,7 @@ add_library(main-obj OBJECT
   )
 
 link_directories(${PROJECT_BINARY_DIR}/src/common)
+link_directories($ENV{CUDA_PATH}/lib64)
 link_libraries(
   ShOCCommon
   cudart
