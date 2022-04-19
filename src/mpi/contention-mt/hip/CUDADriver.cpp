@@ -9,8 +9,7 @@
 using namespace std;
 //using namespace SHOC;
 
-#include <cuda.h>
-#include <cuda_runtime.h>
+#include <hip/hip_runtime.h>
 
 OptionParser _mpicontention_gpuop;
 ResultDatabase _mpicontention_gpuseqrdb, _mpicontention_gpuwuprdb, _mpicontention_gpusimrdb;
@@ -22,17 +21,17 @@ void RunBenchmark(ResultDatabase &resultDB,
 
 void EnumerateDevicesAndChoose(int chooseDevice, bool verbose, const char* prefix = NULL)
 {
-    cudaSetDevice(chooseDevice);
+    hipSetDevice(chooseDevice);
     int actualdevice;
-    cudaGetDevice(&actualdevice);
+    hipGetDevice(&actualdevice);
 
     int deviceCount;
-    cudaGetDeviceCount(&deviceCount);
+    hipGetDeviceCount(&deviceCount);
     string deviceName = "";
     for (int device = 0; device < deviceCount; ++device)
     {
-        cudaDeviceProp deviceProp;
-        cudaGetDeviceProperties(&deviceProp, device);
+        hipDeviceProp_t deviceProp;
+        hipGetDeviceProperties(&deviceProp, device);
         if (device == actualdevice)
             deviceName = deviceProp.name;
 
@@ -90,7 +89,7 @@ int GPUSetup(OptionParser &op, int mympirank, int mynoderank)
     bool verbose = op.getOptionBool("verbose");
 
     int deviceCount;
-    cudaGetDeviceCount(&deviceCount);
+    hipGetDeviceCount(&deviceCount);
     if (device >= deviceCount) {
         cerr << "Warning: device index: " << device <<
         "out of range, defaulting to device 0.\n";

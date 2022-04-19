@@ -1,7 +1,16 @@
 #
-add_executable(BusSpeedDownload
+add_library(BusSpeedDownload-obj OBJECT
   BusSpeedDownload.cu
   )
+
+add_executable(BusSpeedDownload)
+target_link_libraries(BusSpeedDownload
+  BusSpeedDownload-obj
+  )
+
+#add_executable(BusSpeedDownload
+#  BusSpeedDownload.cu
+#  )
 add_executable(BusSpeedReadback
   BusSpeedReadback.cu
   )

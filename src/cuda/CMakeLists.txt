@@ -1,7 +1,6 @@
 #
 enable_language(CUDA)
 message(STATUS "CUDA Compiler is: " ${CMAKE_CUDA_COMPILER})
-set(CMAKE_CUDA_ARCHITECTURES 70)
 set(CUDA_SRC_DIR        ${SHOC_SRC_DIR}/cuda)
 set(CUDA_COMMON_SRC_DIR ${CUDA_SRC_DIR}/common)
 

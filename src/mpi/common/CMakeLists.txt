@@ -19,7 +19,7 @@ target_include_directories(SHOCCommonMPI PUBLIC
 install(TARGETS SHOCCommonMPI
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
-		ARCHIVE DESTINATION lib
-		)
-		
+	ARCHIVE DESTINATION lib
+	)
+
 # eof
