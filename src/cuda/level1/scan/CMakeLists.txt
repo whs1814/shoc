@@ -9,3 +9,16 @@ if(${ENABLE_MPI})
     tpScanLaunchKernel.cu
     )
 endif()
+
+if(${ENABLE_MPI})
+install(TARGETS Scan
+        DESTINATION bin/EP/CUDA
+        )
+install(TARGETS tpScan
+        DESTINATION bin/TP/CUDA
+        )
+else()
+install(TARGETS Scan
+        DESTINATION bin/Serial/CUDA
+	)
+endif()

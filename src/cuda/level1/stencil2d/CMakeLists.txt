@@ -6,3 +6,13 @@ add_executable(Stencil2D
   CUDAStencilFactory.cpp
   CUDAStencilKernel.cu
   )
+
+if(${ENABLE_MPI})
+install(TARGETS Stencil2D
+        DESTINATION bin/TP/CUDA
+        )
+else()
+install(TARGETS Stencil2D
+        DESTINATION bin/Serial/CUDA
+	)
+endif()

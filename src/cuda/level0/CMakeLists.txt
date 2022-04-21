@@ -34,3 +34,13 @@ add_executable(MaxFlops
 #if(${ENABLE_MPI})
 #  add_subdirectory(epmpi)
 #endif()
+
+if(${ENABLE_MPI})
+install(TARGETS BusSpeedDownload BusSpeedReadback DeviceMemory MaxFlops
+        RUNTIME DESTINATION bin/EP/CUDA
+        )
+else()
+install(TARGETS BusSpeedDownload BusSpeedReadback DeviceMemory MaxFlops
+        RUNTIME DESTINATION bin/Serial/CUDA
+	)
+endif()

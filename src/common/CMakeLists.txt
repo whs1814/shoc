@@ -16,7 +16,7 @@ add_library(ShOCCommon STATIC ${SHOC_COMMON_SRCS})
 install(TARGETS ShOCCommon
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
-		ARCHIVE DESTINATION lib
-		)
+	ARCHIVE DESTINATION lib
+	)
 
 # eof
