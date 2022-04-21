@@ -1,8 +1,13 @@
 #
-add_executable(FFT
-  FFT.cpp
+add_library(fftlib-obj OBJECT
   fftlib.cu
   )
+
+add_executable(FFT
+  FFT.cpp
+  )
+
+target_link_libraries(FFT fftlib-obj)
 
 if(${ENABLE_MPI})
 install(TARGETS FFT

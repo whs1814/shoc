@@ -15,5 +15,6 @@ endif()
 
 if(${ENABLE_CUDA})
 	add_subdirectory(cuda)
+	add_subdirectory(stability)
 endif()
 
