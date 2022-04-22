@@ -26,3 +26,13 @@ add_executable(DeviceMemory
 add_executable(MaxFlops
   MaxFlops.cu
   )
+
+if(${ENABLE_MPI})
+install(TARGETS BusSpeedDownload BusSpeedReadback DeviceMemory MaxFlops
+        RUNTIME DESTINATION bin/EP/CUDA
+        )
+else()
+install(TARGETS BusSpeedDownload BusSpeedReadback DeviceMemory MaxFlops
+        RUNTIME DESTINATION bin/Serial/CUDA
+	)
+endif()

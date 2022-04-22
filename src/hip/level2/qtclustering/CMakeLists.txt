@@ -8,3 +8,13 @@ add_executable(QTC
   comm.cpp
   libdata.cpp
   )
+
+if(${ENABLE_MPI})
+install(TARGETS QTC
+        RUNTIME DESTINATION bin/TP/CUDA
+        )
+else()
+install(TARGETS QTC
+        RUNTIME DESTINATION bin/Serial/CUDA
+	)
+endif()
