@@ -9,10 +9,10 @@ add_executable(S3D
 
 if(${ENABLE_MPI})
 install(TARGETS S3D
-        RUNTIME DESTINATION bin/EP/CUDA
+        RUNTIME DESTINATION bin/EP/HIP
         )
 else()
 install(TARGETS S3D
-        RUNTIME DESTINATION bin/Serial/CUDA
+        RUNTIME DESTINATION bin/Serial/HIP
 	)
 endif()

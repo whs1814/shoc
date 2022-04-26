@@ -13,10 +13,10 @@ add_executable(Stencil2D
 
 if(${ENABLE_MPI})
 install(TARGETS Stencil2D
-        DESTINATION bin/TP/CUDA
+        DESTINATION bin/TP/HIP
         )
 else()
 install(TARGETS Stencil2D
-        DESTINATION bin/Serial/CUDA
+        DESTINATION bin/Serial/HIP
 	)
 endif()

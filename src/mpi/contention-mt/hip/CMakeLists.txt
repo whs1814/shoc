@@ -6,5 +6,5 @@ add_executable(MTBusCont
   )
 
 install(TARGETS MTBusCont
-        RUNTIME DESTINATION bin/EP/CUDA
+        RUNTIME DESTINATION bin/EP/HIP
         )

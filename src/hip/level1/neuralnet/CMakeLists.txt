@@ -13,10 +13,10 @@ add_executable(NeuralNet
 
 if(${ENABLE_MPI})
 install(TARGETS NeuralNet
-        DESTINATION bin/EP/CUDA
+        DESTINATION bin/EP/HIP
         )
 else()
 install(TARGETS NeuralNet
-        DESTINATION bin/Serial/CUDA
+        DESTINATION bin/Serial/HIP
 	)
 endif()

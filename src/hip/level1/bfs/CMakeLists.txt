@@ -12,10 +12,10 @@ add_executable(BFS
 
 if(${ENABLE_MPI})
 install(TARGETS BFS
-        DESTINATION bin/EP/CUDA
+        DESTINATION bin/EP/HIP
         )
 else()
 install(TARGETS BFS
-        DESTINATION bin/Serial/CUDA
+        DESTINATION bin/Serial/HIP
 	)
 endif()

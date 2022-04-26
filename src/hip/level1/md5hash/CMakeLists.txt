@@ -9,10 +9,10 @@ add_executable(MD5Hash
 
 if(${ENABLE_MPI})
 install(TARGETS MD5Hash
-        DESTINATION bin/EP/CUDA
+        DESTINATION bin/EP/HIP
         )
 else()
 install(TARGETS MD5Hash
-        DESTINATION bin/Serial/CUDA
+        DESTINATION bin/Serial/HIP
 	)
 endif()

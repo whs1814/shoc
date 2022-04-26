@@ -9,10 +9,10 @@ add_executable(MD
 
 if(${ENABLE_MPI})
 install(TARGETS MD
-        DESTINATION bin/EP/CUDA
+        DESTINATION bin/EP/HIP
         )
 else()
 install(TARGETS MD
-        DESTINATION bin/Serial/CUDA
+        DESTINATION bin/Serial/HIP
 	)
 endif()

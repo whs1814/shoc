@@ -9,10 +9,10 @@ add_executable(Spmv
 
 if(${ENABLE_MPI})
 install(TARGETS Spmv
-        DESTINATION bin/EP/CUDA
+        DESTINATION bin/EP/HIP
         )
 else()
 install(TARGETS Spmv
-        DESTINATION bin/Serial/CUDA
+        DESTINATION bin/Serial/HIP
 	)
 endif()

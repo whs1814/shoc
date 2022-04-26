@@ -13,10 +13,10 @@ add_executable(GEMM
 
 if(${ENABLE_MPI})
 install(TARGETS GEMM
-        RUNTIME DESTINATION bin/EP/CUDA
+        RUNTIME DESTINATION bin/EP/HIP
         )
 else()
 install(TARGETS GEMM
-        RUNTIME DESTINATION bin/Serial/CUDA
+        RUNTIME DESTINATION bin/Serial/HIP
 	)
 endif()

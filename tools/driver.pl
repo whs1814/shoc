@@ -87,7 +87,7 @@ my @CSVResults = (
 # the result names in the CSV output list above.
 
 # Here is the structure of the benchmark arrays:
-# ["BenchmarkProgram", iscuda, isopencl, isopenacc, istp,
+# ["BenchmarkProgram", incuda, inopencl, inopenacc, istp, inhip,
 #        ["firstresultname", findmin/findmax/etc, matchtext],
 #        ["secondresultname", .....] ],
 # ["NextBenchmark", ........ ]
@@ -101,38 +101,38 @@ my @CSVResults = (
 
 
 my @SerialBenchmarks = (
-[ "BusSpeedDownload",  1, 1, 1, 0,
+[ "BusSpeedDownload",  1, 1, 1, 0, 1,
   ["bspeed_download",             \&findmax,     "DownloadSpeed"]
 ],
-[ "BusSpeedReadback",  1, 1, 1, 0,
+[ "BusSpeedReadback",  1, 1, 1, 0, 1,
   ["bspeed_readback",             \&findmax,     "ReadbackSpeed"]
 ],
-[ "MaxFlops",          1, 1, 0, 0,
+[ "MaxFlops",          1, 1, 0, 0, 1,
   ["maxspflops",                  \&findanymax,  "-SP"],
   ["maxdpflops",                  \&findanymax,  "-DP"]
 ],
-[ "DeviceMemory",      1, 1, 0, 0,
+[ "DeviceMemory",      1, 1, 0, 0, 1,
   ["gmem_readbw",                 \&findmax,     "readGlobalMemoryCoalesced"],
   ["gmem_readbw_strided",         \&findmax,     "readGlobalMemoryUnit"],
   ["gmem_writebw",                \&findmax,     "writeGlobalMemoryCoalesced"],
   ["gmem_writebw_strided",        \&findmax,     "writeGlobalMemoryUnit"],
   ["lmem_readbw",                 \&findmax,     "readLocalMemory"],
-  ["lmem_writebw",                \&findmax,     "writeLocalMemory"],
-  ["tex_readbw",                  \&findmax,     "TextureRepeatedRandomAccess"]
+  ["lmem_writebw",                \&findmax,     "writeLocalMemory"]
+#  ["tex_readbw",                  \&findmax,     "TextureRepeatedRandomAccess"]
 ],
-[ "KernelCompile",     0, 1, 0, 0, # OpenCL-only
+[ "KernelCompile",     0, 1, 0, 0, 0, # OpenCL-only
   ["ocl_kernel",                  \&findmin,     "BuildProgram"]
 ],
-[ "QueueDelay",        0, 1, 0, 0, # OpenCL-only
+[ "QueueDelay",        0, 1, 0, 0, 0, # OpenCL-only
   ["ocl_queue",                   \&findmin,     "SSDelay"]
 ],
-[ "BFS",               1, 1, 0, 0,
+[ "BFS",               1, 1, 0, 0, 1,
   ["bfs",                         \&findmax,     "BFS"],
   ["bfs_pcie",                    \&findmax,     "BFS_PCIe"],
   ["bfs_teps",                    \&findmax,     "BFS_teps"]
 ],
 
-[ "FFT",               1, 1, 0, 0,
+[ "FFT",               1, 1, 0, 0, 1,
   ["fft_sp",                      \&findmax,     "SP-FFT"],
   ["fft_sp_pcie",                 \&findmax,     "SP-FFT_PCIe"],
   ["ifft_sp",                     \&findmax,     "SP-FFT-INV"],
@@ -142,7 +142,7 @@ my @SerialBenchmarks = (
   ["ifft_dp",                     \&findmax,     "DP-FFT-INV"],
   ["ifft_dp_pcie",                \&findmax,     "DP-FFT-INV_PCIe"]
 ],
-[ "GEMM",              1, 1, 1, 0,
+[ "GEMM",              1, 1, 1, 0, 1,
   ["sgemm_n",                     \&findmax,     "SGEMM-N"],
   ["sgemm_t",                     \&findmax,     "SGEMM-T"],
   ["sgemm_n_pcie",                \&findmax,     "SGEMM-N_PCIe"],
@@ -152,32 +152,32 @@ my @SerialBenchmarks = (
   ["dgemm_n_pcie",                \&findmax,     "DGEMM-N_PCIe"],
   ["dgemm_t_pcie",                \&findmax,     "DGEMM-T_PCIe"]
 ],
-[ "MD",                1, 1, 1, 0,
+[ "MD",                1, 1, 1, 0, 0, #HIP dose NOT support Texture.
   ["md_sp_bw",                    \&findmax,     "MD-LJ-Bandwidth"],
   ["md_sp_bw_pcie",               \&findmax,     "MD-LJ-Bandwidth_PCIe"],
   ["md_dp_bw",                    \&findmax,     "MD-LJ-DP-Bandwidth"],
   ["md_dp_bw_pcie",               \&findmax,     "MD-LJ-DP-Bandwidth_PCIe"]
 ],
-[ "MD5Hash",           1, 1, 0, 0,
+[ "MD5Hash",           1, 1, 0, 0, 1,
   ["md5hash",                     \&findmax,     "MD5Hash"]
 ],
-[ "Reduction",         1, 1, 1, 0,
+[ "Reduction",         1, 1, 1, 0, 1,
   ["reduction",                   \&findmax,     "Reduction"],
   ["reduction_pcie",              \&findmax,     "Reduction_PCIe"],
   ["reduction_dp",                \&findmax,     "Reduction-DP"],
   ["reduction_dp_pcie",           \&findmax,     "Reduction-DP_PCIe"]
 ],
-[ "Scan",              1, 1, 1, 0,
+[ "Scan",              1, 1, 1, 0, 1,
   ["scan",                        \&findmax,     "Scan"],
   ["scan_pcie",                   \&findmax,     "Scan_PCIe"],
   ["scan_dp",                     \&findmax,     "Scan-DP"],
   ["scan_dp_pcie",                \&findmax,     "Scan-DP_PCIe"]
 ],
-[ "Sort",              1, 1, 0, 0,
+[ "Sort",              1, 1, 0, 0, 1,
   ["sort",                        \&findmax,     "Sort-Rate"],
   ["sort_pcie",                   \&findmax,     "Sort-Rate_PCIe"]
 ],
-[ "Spmv",              1, 1, 1, 0,
+[ "Spmv",              1, 1, 1, 0, 0, #HIP dose NOT support Texture.
   ["spmv_csr_scalar_sp",          \&findmax,     "CSR-Scalar-SP"],
   ["spmv_csr_scalar_sp_pcie",     \&findmax,     "CSR-Scalar-SP_PCIe"],
   ["spmv_csr_scalar_dp",          \&findmax,     "CSR-Scalar-DP"],
@@ -197,23 +197,23 @@ my @SerialBenchmarks = (
   ["spmv_ellpackr_sp",            \&findmax,     "ELLPACKR-SP"],
   ["spmv_ellpackr_dp",            \&findmax,     "ELLPACKR-DP"]
 ],
-[ "Stencil2D",         1, 1, 1, 0,
+[ "Stencil2D",         1, 1, 1, 0, 1,
   ["stencil",                     \&findmax,     "SP_Sten2D"],
   ["stencil_dp",                  \&findmax,     "DP_Sten2D"]
 ],
-[ "Triad",             1, 1, 0, 0,
+[ "Triad",             1, 1, 0, 0, 1,
   ["triad_bw",                    \&findmax,     "TriadBdwth"]
 ],
-[ "S3D",               1, 1, 0, 0,
+[ "S3D",               1, 1, 0, 0, 1,
   ["s3d",                         \&findmax,     "S3D-SP"],
   ["s3d_pcie",                    \&findmax,     "S3D-SP_PCIe"],
   ["s3d_dp",                      \&findmax,     "S3D-DP"],
   ["s3d_dp_pcie",                 \&findmax,     "S3D-DP_PCIe"]
-]#,
-#[ "QTC",               1, 0, 0, 1,
-#  ["qtc",                         \&findmin,     "QTC+PCI_Trans."],
-#  ["qtc_kernel",                  \&findmin,     "QTC_Kernel"]
-#]
+],
+[ "QTC",               1, 0, 0, 0, 1,
+  ["qtc",                         \&findmin,     "QTC+PCI_Trans."],
+  ["qtc_kernel",                  \&findmin,     "QTC_Kernel"]
+]
 );
 
 # ----------------------------------------------------------------------------
@@ -224,58 +224,75 @@ my @SerialBenchmarks = (
 # the result names in the CSV output list above.
 
 my @ParallelBenchmarks = (
-[ "BusSpeedDownload",  1, 1, 1, 0,
+[ "BusSpeedDownload",  1, 1, 1, 0, 1,
   ["bspeed_download",             \&findmean,    "DownloadSpeed(max)"]
 ],
-[ "BusSpeedReadback",  1, 1, 1, 0,
+[ "BusSpeedReadback",  1, 1, 1, 0, 1,
   ["bspeed_readback",             \&findmean,    "ReadbackSpeed(max)"]
 ],
-[ "MaxFlops",          1, 1, 0, 0,
+[ "MaxFlops",          1, 1, 0, 0, 1,
   ["maxspflops",                  \&findanymean, "-SP"],
   ["maxdpflops",                  \&findanymean, "-DP"]
 ],
-[ "DeviceMemory",      1, 1, 0, 0,
+[ "DeviceMemory",      1, 1, 0, 0, 1,
   ["gmem_readbw",                 \&findmean,     "readGlobalMemoryCoalesced(max)"],
   ["gmem_readbw_strided",         \&findmean,     "readGlobalMemoryUnit(max)"],
   ["gmem_writebw",                \&findmean,     "writeGlobalMemoryCoalesced(max)"],
   ["gmem_writebw_strided",        \&findmean,     "writeGlobalMemoryUnit(max)"],
   ["lmem_readbw",                 \&findmean,     "readLocalMemory(max)"],
-  ["lmem_writebw",                \&findmean,     "writeLocalMemory(max)"],
-  ["tex_readbw",                  \&findmean,     "TextureRepeatedRandomAccess(max)"]
+  ["lmem_writebw",                \&findmean,     "writeLocalMemory(max)"]
+#  ["tex_readbw",                  \&findmean,     "TextureRepeatedRandomAccess(max)"]
 ],
-[ "KernelCompile",     0, 1, 0, 0,
+[ "KernelCompile",     0, 1, 0, 0, 0,
   ["ocl_kernel",                  \&findmean,    "BuildProgram(min)"]
 ],
-[ "QueueDelay",        0, 1, 0, 0,
+[ "QueueDelay",        0, 1, 0, 0, 0,
   ["ocl_queue",                   \&findmean,    "SSDelay(min)"]
 ],
-[ "FFT",               1, 1, 0, 0,
+[ "BFS",               1, 1, 0, 0, 1,
+  ["bfs",                         \&findmax,     "BFS(max)"],
+  ["bfs_pcie",                    \&findmax,     "BFS_PCIe(max)"],
+  ["bfs_teps",                    \&findmax,     "BFS_teps(max)"]
+],
+[ "FFT",               1, 1, 0, 0, 1,
   ["fft_sp",                      \&findmean,    "SP-FFT(max)"],
   ["fft_dp",                      \&findmean,    "DP-FFT(max)"]
 ],
-[ "GEMM",              1, 1, 1, 0,
+[ "GEMM",              1, 1, 1, 0, 1,
   ["sgemm_n",                     \&findmean,    "SGEMM-N(max)"],
   ["dgemm_n",                     \&findmean,    "DGEMM-N(max)"]
 ],
-[ "MD",                1, 1, 1, 0,
+[ "MD",                1, 1, 1, 0, 0,
   ["md_sp_flops",                 \&findmean,    "MD-LJ(max)"],
   ["md_dp_flops",                 \&findmean,    "MD-LJ-DP(max)"]
 ],
-[ "MD5Hash",           1, 1, 0, 0,
+[ "MD5Hash",           1, 1, 0, 0, 1,
   ["md5hash",                     \&findmean,    "MD5Hash(max)"]
 ],
-[ "Reduction",         1, 1, 1, 0,
+[ "Reduction",         1, 1, 1, 0, 1,
   ["reduction",                   \&findmean,    "Reduction(max)"],
   ["reduction_dp",                \&findmean,    "Reduction-DP(max)"]
 ],
-[ "Scan",              1, 1, 1, 0,
+[ "tpReduction",       1, 1, 1, 1, 1,
+  ["allreduce_dp_kernel",         \&findmean,    "AllReduce-DP-Kernel(max)"],
+  ["allreduce_dp_overall",        \&findmean,    "AllReduce-DP-Overall(max)"],
+  ["allreduce_sp_kernel",         \&findmean,    "AllReduce-SP-Kernel(max)"],
+  ["allreduce_sp_overall",        \&findmean,    "AllReduce-SP-Overall(max)"]
+],
+[ "Scan",              1, 1, 1, 0, 1,
   ["scan",                        \&findmean,    "Scan(max)"],
   ["scan_dp",                     \&findmean,    "Scan-DP(max)"]
 ],
-[ "Sort",              1, 1, 0, 0,
+[ "tpScan",            1, 1, 1, 1, 1,
+  ["tpscan_dp_kernel",            \&findmean,    "TPScan-DP-Kernel(max)"],
+  ["tpscan_dp_overall",           \&findmean,    "TPScan-DP-Overall(max)"],
+  ["tpscan_sp_kernel",            \&findmean,    "TPScan-SP-Kernel(max)"],
+  ["tpscan_sp_overall",           \&findmean,    "TPScan-SP-Overall(max)"]
+],
+[ "Sort",              1, 1, 0, 0, 1,
   ["sort",                        \&findmean,    "Sort-Rate(max)"]
 ],
-[ "Spmv",              1, 1, 1, 0,
+[ "Spmv",              1, 1, 1, 0, 0,
   ["spmv_csr_scalar_sp",          \&findmean,    "CSR-Scalar-SP(max)"],
   ["spmv_csr_vector_sp",          \&findmean,    "CSR-Vector-SP(max)"],
   ["spmv_ellpackr_sp",            \&findmean,    "ELLPACKR-SP(max)"],
@@ -283,20 +300,20 @@ my @ParallelBenchmarks = (
   ["spmv_csr_vector_dp",          \&findmean,    "CSR-Vector-DP(max)"],
   ["spmv_ellpackr_dp",            \&findmean,    "ELLPACKR-DP(max)"]
 ],
-[ "Stencil2D",         1, 1, 1, 1,
+[ "Stencil2D",         1, 1, 1, 1, 1,
   ["stencil",                     \&findmean,     "SP_Sten2D(max)"],
   ["stencil_dp",                  \&findmean,     "DP_Sten2D(max)"]
 ],
-[ "Triad",             1, 1, 0, 0,
+[ "Triad",             1, 1, 0, 0, 1,
   ["triad_bw",                    \&findmean,    "TriadBdwth(max)"]
 ],
-[ "S3D",               1, 1, 0, 0,
+[ "S3D",               1, 1, 0, 0, 1,
   ["s3d",                         \&findmean,    "S3D-SP(max)"],
   ["s3d_dp",                      \&findmean,    "S3D-DP(max)"]
 ],
-[ "QTC",               1, 0, 0, 1,
-  ["qtc",                         \&findmin,     "QTC+PCI_Trans."],
-  ["qtc_kernel",                  \&findmin,     "QTC_Kernel"]
+[ "QTC",               1, 0, 0, 1, 1,
+  ["qtc",                         \&findmin,     "QTC+PCI_Trans.(max)"],
+  ["qtc_kernel",                  \&findmin,     "QTC_Kernel(max)"]
 ]
 );
 
@@ -369,19 +386,25 @@ while (scalar(@ARGV) > 0) {
     }
     elsif ($arg eq "-cuda")
     {
-        die "Please choose one of '-cuda', '-opencl', '-openacc' to set the operating mode.\n"
+        die "Please choose one of '-cuda', '-hip', '-opencl', '-openacc' to set the operating mode.\n"
           if ($mode ne "");
         $mode = "cuda";
     }
+    elsif ($arg eq "-hip")
+    {
+        die "Please choose one of '-cuda', '-hip', '-opencl', '-openacc' to set the operating mode.\n"
+          if ($mode ne "");
+        $mode = "hip";
+    }
     elsif ($arg eq "-opencl")
     {
-        die "Please choose one of '-cuda', '-opencl', '-openacc' to set the operating mode.\n"
+        die "Please choose one of '-cuda', '-hip', '-opencl', '-openacc' to set the operating mode.\n"
           if ($mode ne "");
         $mode = "opencl";
     }
     elsif ($arg eq "-openacc")
     {
-        die "Please choose one of '-cuda', '-opencl', '-openacc' to set the operating mode.\n"
+        die "Please choose one of '-cuda', '-hip', '-opencl', '-openacc' to set the operating mode.\n"
           if ($mode ne "");
         $mode = "openacc";
     }
@@ -407,6 +430,7 @@ if (! -d "$bindir/Serial")
 # Note: this check is not exhaustive.
 if ( ! (( -f "$bindir/Serial/OpenCL/Sort" && -x "$bindir/Serial/OpenCL/Sort" ) ||
         ( -f "$bindir/Serial/CUDA/Sort" && -x "$bindir/Serial/CUDA/Sort" ) ||
+        ( -f "$bindir/Serial/HIP/Sort" && -x "$bindir/Serial/HIP/Sort" ) ||
         ( -f "$bindir/Serial/OpenACC/Reduction" && -x "$bindir/OpenACC/Reduction")) )
     
 {
@@ -419,7 +443,7 @@ if ( ! (( -f "$bindir/Serial/OpenCL/Sort" && -x "$bindir/Serial/OpenCL/Sort" ) |
 # test cuda vs opencl
 if ($mode eq "")
 {
-    die "Please choose either -cuda, -opencl, or -openacc.\n";
+    die "Please choose either -cuda, -hip, -opencl, or -openacc.\n";
 }
 
 # ----------------------------------------------------------------------------
@@ -506,8 +530,10 @@ foreach my $bench (@$benchmarks)
     my $inopencl= $$bench[2];
     my $inopenacc = $$bench[3];
     my $istp    = $$bench[4];
+    my $inhip   = $$bench[5];
 
     if ((!$incuda   and ($mode eq "cuda")) or
+        (!$inhip and ($mode eq "hip")) or
         (!$inopencl and ($mode eq "opencl")) or
         (!$inopenacc and ($mode eq "openacc")) )
     {
@@ -542,10 +568,10 @@ foreach my $bench (@$benchmarks)
         }
     }
 
-    my $numResults = ($#$bench) - 4;
+    my $numResults = ($#$bench) - 5;
     for (my $r=0; $r<$numResults; $r++)
     {
-        my $res = $$bench[5+$r];
+        my $res = $$bench[6+$r];
         my $resname = $$res[0];
         my $resfunc = $$res[1];
         my $respatt = $$res[2];
@@ -784,6 +810,7 @@ sub buildCommand {
    }
    $command .= "/OpenCL/" if ($mode eq "opencl");
    $command .= "/CUDA/"   if ($mode eq "cuda");
+   $command .= "/HIP/"   if ($mode eq "hip");
    $command .= "/OpenACC/" if ($mode eq "openacc");
    $command .= $progname;
 
@@ -832,6 +859,19 @@ sub printDevInfo {
           system("nvidia-smi -r -a >Logs/eccConfig.txt 2> Logs/eccConfig.err");
           system("nvcc --version >Logs/nvccVersion.txt 2> Logs/nvccVersion.err");
           system("cat /proc/driver/nvidia/version >Logs/driverVersion.txt 2>Logs/driverVersion.err");
+       }
+       elsif ($mode eq "hip" ) {
+          $devNameString = "name";
+          my $command = $hostfileString . $bindir .
+              "/Serial/HIP/BusSpeedDownload -i > Logs/deviceInfo.txt 2> Logs/deviceInfo.err";
+          open(DETECT,">Logs/detect.txt");
+          print DETECT "Running this command to detect devices:\n$command\n";
+          close(DETECT);
+          $retval = system($command);
+          # Collect info from amd utilities
+          system("rocm-smi -a >Logs/eccConfig.txt 2> Logs/eccConfig.err");
+          system("hipcc --version >Logs/hipccVersion.txt 2> Logs/hipccVersion.err");
+          system("rpm -qa | grep dkms >Logs/driverVersion.txt 2>Logs/driverVersion.err");
        }
        elsif ($mode eq "opencl" ) {
           $devNameString = "DeviceName";
@@ -912,9 +952,10 @@ sub usage() {
    print "Mandatory Options\n";
    print "-s       - Problem size (see SHOC wiki for specifics)\n";
    print "-cuda    - Use the cuda version of benchmarks\n";
+   print "-hip     - Use the hip version of benchmarks\n";
    print "-opencl  - Use the opencl version of the benchmarks\n";
-   print "-openacc - Use the opencl version of the benchmarks\n";
-   print "Note -cuda, -opencl, -openacc are mutually exlcusive.\n\n";
+   print "-openacc - Use the openacc version of the benchmarks\n";
+   print "Note -cuda, -hip, -opencl, -openacc are mutually exlcusive.\n\n";
 
    print "Other options\n";
    print "-n        - Number of nodes to run on\n";

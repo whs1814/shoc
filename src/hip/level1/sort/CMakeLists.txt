@@ -11,10 +11,10 @@ add_executable(Sort
 
 if(${ENABLE_MPI})
 install(TARGETS Sort
-        DESTINATION bin/EP/CUDA
+        DESTINATION bin/EP/HIP
         )
 else()
 install(TARGETS Sort
-        DESTINATION bin/Serial/CUDA
+        DESTINATION bin/Serial/HIP
 	)
 endif()

@@ -8,6 +8,10 @@ while ($_ = shift @ARGV)
     {
 	$platform = "CUDA";
     }
+    elsif (/^-hip$/ or /^--hip$/)
+    {
+	$platform = "HIP";
+    }
     elsif (/^-opencl$/ or /^--opencl$/)
     {
 	$platform = "OpenCL";
@@ -16,7 +20,7 @@ while ($_ = shift @ARGV)
     {
 	print STDERR "Unknown argument: '$_'\n";
 	print STDERR "\n";
-	print STDERR "Usage: $0 [--cuda | --opencl]\n";
+	print STDERR "Usage: $0 [--cuda | --hip | --opencl]\n";
 	print STDERR "       (defaults to OpenCL)\n";
 	print STDERR "\n";
 	exit 1;
@@ -24,7 +28,7 @@ while ($_ = shift @ARGV)
 }
 print "Using platform: $platform\n";
 
-# Get the CUDA/OpenCL devices available
+# Get the CUDA/HIP/OpenCL devices available
 @devicequeryoutput = `../bin/Serial/$platform/BusSpeedDownload -i`;
 $num_devs = (grep(/Number of devices/, @devicequeryoutput))[0];
 $num_devs =~ s/^.*=\s*//;

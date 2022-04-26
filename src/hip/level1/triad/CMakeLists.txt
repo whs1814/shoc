@@ -9,10 +9,10 @@ add_executable(Triad
 
 if(${ENABLE_MPI})
 install(TARGETS Triad
-        DESTINATION bin/EP/CUDA
+        DESTINATION bin/EP/HIP
         )
 else()
 install(TARGETS Triad
-        DESTINATION bin/Serial/CUDA
+        DESTINATION bin/Serial/HIP
 	)
 endif()

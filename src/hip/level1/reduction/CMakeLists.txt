@@ -17,13 +17,13 @@ endif()
 
 if(${ENABLE_MPI})
 install(TARGETS Reduction
-        DESTINATION bin/EP/CUDA
+        DESTINATION bin/EP/HIP
         )
 install(TARGETS tpReduction
-        DESTINATION bin/TP/CUDA
+        DESTINATION bin/TP/HIP
         )
 else()
 install(TARGETS Reduction
-        DESTINATION bin/Serial/CUDA
+        DESTINATION bin/Serial/HIP
 	)
 endif()

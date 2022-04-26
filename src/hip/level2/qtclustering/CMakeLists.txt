@@ -11,10 +11,10 @@ add_executable(QTC
 
 if(${ENABLE_MPI})
 install(TARGETS QTC
-        RUNTIME DESTINATION bin/TP/CUDA
+        RUNTIME DESTINATION bin/TP/HIP
         )
 else()
 install(TARGETS QTC
-        RUNTIME DESTINATION bin/Serial/CUDA
+        RUNTIME DESTINATION bin/Serial/HIP
 	)
 endif()

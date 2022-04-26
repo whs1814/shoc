@@ -17,13 +17,13 @@ endif()
 
 if(${ENABLE_MPI})
 install(TARGETS Scan
-        DESTINATION bin/EP/CUDA
+        DESTINATION bin/EP/HIP
         )
 install(TARGETS tpScan
-        DESTINATION bin/TP/CUDA
+        DESTINATION bin/TP/HIP
         )
 else()
 install(TARGETS Scan
-        DESTINATION bin/Serial/CUDA
+        DESTINATION bin/Serial/HIP
 	)
 endif()

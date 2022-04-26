@@ -6,5 +6,5 @@ add_executable(BusCont
   )
 
 install(TARGETS BusCont
-        RUNTIME DESTINATION bin/EP/CUDA
+        RUNTIME DESTINATION bin/EP/HIP
         )
