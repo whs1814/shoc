@@ -8,16 +8,16 @@ set(SHOC_COMMON_OpenCL_SRCS
 
 #set(CMAKE_CXX_COMPILER ${MPI_CXX_COMPILER})
 
-add_library(libSHOCCommonOpenCL STATIC ${SHOC_COMMON_OpenCL_SRCS})
-target_include_directories(libSHOCCommonOpenCL PUBLIC
+add_library(SHOCCommonOpenCL STATIC ${SHOC_COMMON_OpenCL_SRCS})
+target_include_directories(SHOCCommonOpenCL PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	${OpenCL_INCLUDE_DIRS}
 	)
 
-install(TARGETS libSHOCCommonOpenCL
+install(TARGETS SHOCCommonOpenCL
       RUNTIME DESTINATION bin
       LIBRARY DESTINATION lib
-			ARCHIVE DESTINATION lib
-			)
+      ARCHIVE DESTINATION lib
+      )
 
 # eof
