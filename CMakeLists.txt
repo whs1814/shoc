@@ -12,7 +12,7 @@ set(cmake_verbose 1)          # set to 1 if you need to debug the cmake build
 # Set up some global build variables
 #
 #set(CMAKE_BUILD_TYPE Release)
-set(CMAKE_BUILD_TYPE Debug)
+#set(CMAKE_BUILD_TYPE Debug)
 
 set(SHOC_SRC_DIR         ${PROJECT_SOURCE_DIR}/src)
 set(SHOC_INC_DIR         ${PROJECT_SOURCE_DIR}/include/shoc)
